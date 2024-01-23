@@ -1,0 +1,52 @@
+services:
+  api:
+    build:
+      context: ./api
+    networks:
+      - internal
+    ports:
+      - "3000:3000"
+
+  db:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: tchat
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports:
+      - "3306:3306"
+    networks:
+      - internal
+    volumes:
+      - db_data:/var/lib/mysql
+
+  thread:
+    container_name: thread-service
+    build:
+      context: ./thread_app
+    networks:
+      - internal
+    ports:
+      - "80:80"
+    depends_on:
+      - api
+
+  sender:
+    container_name: sender-service
+    build:
+      context: ./sender_app
+    networks:
+      - internal
+    ports:
+      - "8080:8080"
+    depends_on:
+      - api
+
+networks:
+  internal:
+    driver: bridge
+
+volumes:
+  db_data:
