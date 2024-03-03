@@ -1,0 +1,27 @@
+name: Deploy to Docker Swarm
+
+on:
+  push:
+    branches:
+      - main # ajustez la branche si nécessaire
+
+jobs:
+  deploy:
+    name: Deploy to Docker Swarm
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      # SSH to Docker Swarm Manager
+      - name: SSH to Docker Swarm Manager
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SWARM_HOST }}
+          username: ${{ secrets.SWARM_USERNAME }}
+          key: ${{ secrets.SWARM_SSH_KEY }}
+
+      # Update Docker Stack
+      - name: Update Docker Stack
+        run: |
+          ssh ${{ secrets.SWARM_USERNAME }}@${{ secrets.SWARM_HOST }} "cd ../../ && docker stack deploy -c docker-compose.yml tchat"
