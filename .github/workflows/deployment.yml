@@ -24,4 +24,7 @@ jobs:
       # Update Docker Stack
       - name: Update Docker Stack
         run: |
-          ssh -i ${{ secrets.SWARM_SSH_KEY }} ${{ secrets.SWARM_USERNAME }}@${{ secrets.SWARM_HOST }} "cd ../../ && docker stack deploy -c docker-compose.yml tchat"
+          echo "${{ secrets.SWARM_SSH_KEY }}" > /tmp/id_rsa
+          chmod 600 /tmp/id_rsa
+          ssh -i /tmp/id_rsa ${{ secrets.SWARM_USERNAME }}@${{ secrets.SWARM_HOST }} "cd ../../ && docker stack deploy -c docker-compose.yml tchat"
+          rm /tmp/id_rsa
