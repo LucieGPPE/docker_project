@@ -8,6 +8,14 @@ const PORT = process.env.PORT || 3000;
 // Middleware pour parser les requêtes JSON
 app.use(bodyParser.json());
 
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*"); // Autorise l'accès depuis n'importe quel domaine
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE"); // Autorise les méthodes GET, POST, PUT, DELETE
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization"); // Autorise les en-têtes Content-Type et Authorization
+  res.setHeader("Access-Control-Allow-Credentials", true); // Autorise les informations d'authentification dans les requêtes
+  next();
+});
+
 // Fonction pour attendre 10 secondes
 const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
