@@ -3,7 +3,7 @@ name: Deploy to Docker Swarm
 on:
   push:
     branches:
-      - main # ajustez la branche si nécessaire
+      - main
 
 jobs:
   deploy:
@@ -24,4 +24,6 @@ jobs:
       # Update Docker Stack
       - name: Update Docker Stack
         run: |
-          ssh ${{ secrets.SWARM_USERNAME }}@${{ secrets.SWARM_HOST }} "cd ../../ && docker stack deploy -c docker-compose.yml tchat"
+          echo "${{ secrets.SWARM_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh -i ~/.ssh/id_rsa ${{ secrets.SWARM_USERNAME }}@${{ secrets.SWARM_HOST }} "cd ../../ && docker stack deploy -c docker-compose.yml tchat"
