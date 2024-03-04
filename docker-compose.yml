@@ -38,6 +38,8 @@ services:
       - "80:80"
     depends_on:
       - api
+    environment:
+      URI_API: ${URI_API}
 
   sender:
     container_name: sender-service
@@ -49,6 +51,8 @@ services:
       - "8080:8080"
     depends_on:
       - api
+    environment:
+      URI_API: ${URI_API}
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
